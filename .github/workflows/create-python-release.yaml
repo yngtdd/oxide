@@ -22,3 +22,27 @@ jobs:
           maturin-version: '0.14.10'
           command: publish
           args: -m py-oxide/Cargo.toml -i 3.9 --skip-existing -o wheels -u yngtodd
+
+  win-macos:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.7'
+
+      - name: Publish wheel
+        uses: messense/maturin-action@v1
+        env:
+          MATURIN_PASSWORD: ${{ secrets.PYPI_PASS }}
+          RUSTFLAGS: -C target-feature=+fxsr,+sse,+sse2,+sse3,+sse4.1,+sse4.2
+        with:
+          rust-toolchain: nightly-2023-02-14
+          maturin-version: '0.14.10'
+          command: publish
+          args: -m py-oxide/Cargo.toml -i 3.9 --no-sdist --skip-existing -o wheels -u yngtodd
