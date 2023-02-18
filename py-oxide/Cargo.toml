@@ -1,0 +1,17 @@
+[package]
+name = "py-oxide"
+version = "0.1.0"
+edition = "2021"
+
+[workspace]
+
+[lib]
+name = "oxide"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.16.3", features = ["extension-module"] }
+oxide = { path = "../oxide" }
+
+[package.metadata.maturin]
+python-source = "python"
