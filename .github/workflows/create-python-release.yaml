@@ -21,4 +21,4 @@ jobs:
           rust-toolchain: nightly-2023-02-14
           maturin-version: '0.14.10'
           command: publish
-          args: -m py-oxide/Cargo.toml --skip-existing -o wheels -u yngtodd
+          args: -m py-oxide/Cargo.toml -i 3.9 --skip-existing -o wheels -u yngtodd
