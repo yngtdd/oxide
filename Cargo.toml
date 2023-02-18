@@ -1,7 +1,6 @@
 [workspace]
 members = [
   "oxide",
-  "py-oxide"
 ]
 
 [workspace.package]
