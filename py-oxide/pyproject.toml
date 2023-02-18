@@ -5,6 +5,15 @@ build-backend = "maturin"
 [project]
 name = "pyoxide"
 requires-python = ">=3.8"
+readme = "README.md"
+description = "Mixing Python with Rust"
+authors = [
+  {email = "todd.young@pinnaclereliability.com"},
+  {name = "Todd Young"}
+]
+maintainers = [
+  {name = "Todd Young", email = "todd.young@pinnaclereliability.com"}
+]
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
