@@ -5,6 +5,13 @@ use oxide::add;
 ///
 /// This uses our core library, `oxide` to handle the
 /// addition in Rust.
+///
+/// # Args
+///     a (usize): left operand
+///     b (usize): right operand
+///
+/// # Returns
+///     Sum of `a` and `b` as a String
 #[pyfunction]
 fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
     Ok(add(a, b).to_string())
