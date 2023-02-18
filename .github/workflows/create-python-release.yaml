@@ -2,8 +2,10 @@ name: wheels
 
 on:
   push:
-    tags:
-      - py-*
+
+on:
+  push:
+  pull_request:
 
 jobs:
   manylinux-x64_64:
