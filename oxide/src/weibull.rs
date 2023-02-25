@@ -32,8 +32,9 @@ impl WeibullModel {
 ///
 /// ```
 /// use statrs::distribution::{Weibull, ContinuousCDF};
+/// use oxide::weibull::reliability;
 ///
-/// let weibull = Weibull::new(0.5, 200.0);
+/// let weibull = Weibull::new(0.5, 200.0).unwrap();
 /// let reliability = reliability(weibull, 720);
 /// ```
 pub fn reliability(weibull: Weibull, num_steps: u32) -> Vec<f64> {
