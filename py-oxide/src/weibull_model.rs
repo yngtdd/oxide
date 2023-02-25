@@ -44,7 +44,7 @@ impl WeibullModel {
     pub fn scale(&self) -> PyResult<f64> {
         Ok(self.scale)
     }
-} 
+}
 
 #[pymodule]
 pub fn weibull_model(_py: Python, m: &PyModule) -> PyResult<()> {

@@ -1,4 +1,4 @@
-use statrs::distribution::{Weibull, ContinuousCDF};
+use statrs::distribution::{ContinuousCDF, Weibull};
 
 /// Weibull Model
 #[derive(Debug, Clone)]
@@ -14,7 +14,11 @@ pub struct WeibullModel {
 impl WeibullModel {
     pub fn new(shape: f64, scale: f64) -> Self {
         let weibull = Weibull::new(shape, scale).unwrap();
-        Self { shape, scale, weibull }
+        Self {
+            shape,
+            scale,
+            weibull,
+        }
     }
 }
 
@@ -38,7 +42,5 @@ impl WeibullModel {
 /// let reliability = reliability(weibull, 720);
 /// ```
 pub fn reliability(weibull: Weibull, num_steps: u32) -> Vec<f64> {
-    (0..num_steps)
-        .map(|x| weibull.sf(x as f64))
-        .collect()
+    (0..num_steps).map(|x| weibull.sf(x as f64)).collect()
 }
