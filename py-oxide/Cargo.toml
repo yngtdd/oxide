@@ -10,8 +10,8 @@ name = "oxide"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.16.3", features = ["extension-module"] }
 oxide = { path = "../oxide" }
+pyo3 = "0.18.1"
 
 [package.metadata.maturin]
 python-source = "python"
