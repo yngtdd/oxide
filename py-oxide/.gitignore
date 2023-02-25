@@ -59,6 +59,9 @@ coverage.xml
 
 .DS_Store
 
+# Jupyter
+.ipynb_checkpoints
+
 # Sphinx documentation
 docs/_build/
 
