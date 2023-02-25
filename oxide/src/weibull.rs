@@ -1,9 +1,13 @@
 use statrs::distribution::{Weibull, ContinuousCDF};
 
+/// Weibull Model
 #[derive(Debug, Clone)]
 pub struct WeibullModel {
+    /// The Weibull distribution shape
     pub shape: f64,
+    /// The Weibull distribution scale
     pub scale: f64,
+    /// The `statrs::distribution::Weibull` distribution
     pub weibull: Weibull,
 }
 
@@ -14,12 +18,26 @@ impl WeibullModel {
     }
 }
 
+/// Draw the reliability over time for a Weibull distribution
+///
+/// Given a Weibull distribution, draw the survival function over
+/// time for a given number to unitless time steps.
+///
+/// # Arguments:
+///
+/// * `weibull`: an instance of `statrs::distribution::Weibull`
+/// * `num_steps`: number of (unitless) time steps to draw the function over
+///
+/// ## Example:
+///
+/// ```
+/// use statrs::distribution::{Weibull, ContinuousCDF};
+///
+/// let weibull = Weibull::new(0.5, 200);
+/// let reliability = reliability(weibull, 720);
+/// ```
 pub fn reliability(weibull: Weibull, num_steps: u32) -> Vec<f64> {
-    let mut reliability: Vec<f64> = Vec::new();
-    for x in 0..num_steps {
-        let val = weibull.sf(x as f64);
-        reliability.push(val);
-    }
-
-    reliability
+    (0..num_steps)
+        .map(|x| weibull.sf(x as f64))
+        .collect()
 }
