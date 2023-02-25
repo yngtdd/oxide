@@ -3,6 +3,12 @@ use pyo3::prelude::*;
 extern crate oxide as ox;
 use ox::weibull;
 
+/// Weibull model
+///
+/// Args:
+///     shape (float): Weibull model shape
+///     scale (float): Weibull model scale
+///     num_steps (int): length of time (unitless) for the reliability function
 #[pyclass]
 pub struct WeibullModel {
     shape: f64,
