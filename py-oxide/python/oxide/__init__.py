@@ -1,4 +1,4 @@
-from .oxide import *
+from .oxide import weibull_model
 
 
 __doc__ = oxide.__doc__
