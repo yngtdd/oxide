@@ -22,7 +22,22 @@ impl WeibullModel {
             reliability,
         }
     }
-}
+
+    #[getter]
+    fn reliability(&self) -> PyResult<Vec<f64>> {
+        Ok(self.reliability.clone())
+    }
+
+    #[getter]
+    fn shape(&self) -> PyResult<f64> {
+        Ok(self.shape)
+    }
+
+    #[getter]
+    fn scale(&self) -> PyResult<f64> {
+        Ok(self.scale)
+    }
+} 
 
 #[pymodule]
 fn oxide(_py: Python, m: &PyModule) -> PyResult<()> {
