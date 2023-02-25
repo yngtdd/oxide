@@ -33,7 +33,7 @@ impl WeibullModel {
 /// ```
 /// use statrs::distribution::{Weibull, ContinuousCDF};
 ///
-/// let weibull = Weibull::new(0.5, 200);
+/// let weibull = Weibull::new(0.5, 200.0);
 /// let reliability = reliability(weibull, 720);
 /// ```
 pub fn reliability(weibull: Weibull, num_steps: u32) -> Vec<f64> {
