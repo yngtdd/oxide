@@ -1,1 +1,5 @@
-pyoxide/examples/notebooks/** linguist-vendored
+# Hide Jupyter notebooks from GitHub stats
+# For text count
+*.ipynb  text
+# To ignore it use below
+*.ipynb linguist-documentation
