@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "oxide",
+  "oxide-lambda"
 ]
 
 [workspace.package]
