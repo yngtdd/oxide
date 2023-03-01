@@ -1,4 +1,11 @@
 use lambda_http::{run, service_fn, Body, Error, Request, RequestExt, Response};
+use statrs::distribution::Weibull;
+use oxide::weibull::reliability;
+
+fn draw_reliability(shape: f64, scale: f64) {
+    let weibull = Weibull::new(shape, scale).unwrap();
+    let _reliability = reliability(weibull, 1_000_000);
+}
 
 /// This is the main body for the function.
 /// Write your code inside it.
@@ -6,6 +13,7 @@ use lambda_http::{run, service_fn, Body, Error, Request, RequestExt, Response};
 /// - https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/examples
 async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
     // Extract some useful information from the request
+    draw_reliability(0.5, 200.0);
 
     // Return something that implements IntoResponse.
     // It will be serialized to the right response event automatically by the runtime
