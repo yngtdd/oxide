@@ -1,27 +1,38 @@
-use lambda_http::{run, service_fn, Body, Error, Request, RequestExt, Response};
+use lambda_runtime::{service_fn, Error, LambdaEvent};
+use serde::{Deserialize, Serialize};
 use statrs::distribution::Weibull;
 use oxide::weibull::reliability;
 
-fn draw_reliability(shape: f64, scale: f64) {
-    let weibull = Weibull::new(shape, scale).unwrap();
-    let _reliability = reliability(weibull, 1_000_000);
+#[derive(Deserialize)]
+struct Request {
+    asset_id: String,
+    weibull_shape: f64,
+    weibull_scale: f64,
 }
 
-/// This is the main body for the function.
-/// Write your code inside it.
-/// There are some code example in the following URLs:
-/// - https://github.com/awslabs/aws-lambda-rust-runtime/tree/main/examples
-async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
-    // Extract some useful information from the request
-    draw_reliability(0.5, 200.0);
+#[derive(Serialize)]
+struct Response {
+    req_id: String,
+    msg: String,
+}
 
-    // Return something that implements IntoResponse.
-    // It will be serialized to the right response event automatically by the runtime
-    let resp = Response::builder()
-        .status(200)
-        .header("content-type", "text/html")
-        .body("Hello AWS Lambda HTTP request".into())
-        .map_err(Box::new)?;
+/// Draw a survival function for a Weibull distribution
+fn draw_reliability(shape: f64, scale: f64) -> Vec<f64> {
+    let weibull = Weibull::new(shape, scale).unwrap();
+    let reliability = reliability(weibull, 1_000_000);
+    reliability
+}
+
+async fn function_handler(event: LambdaEvent<Request>) -> Result<Response, Error> {
+    let shape = event.payload.weibull_shape;
+    let scale = event.payload.weibull_scale;
+    let reliability = draw_reliability(shape, scale);
+
+    let resp = Response {
+        req_id: event.context.request_id,
+        msg: format!("Asset reliability curve has {} timesteps!", reliability.len()),
+    };
+
     Ok(resp)
 }
 
@@ -29,11 +40,11 @@ async fn function_handler(event: Request) -> Result<Response<Body>, Error> {
 async fn main() -> Result<(), Error> {
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::INFO)
-        // disable printing the name of the module in every log line.
         .with_target(false)
-        // disabling time is handy because CloudWatch will add the ingestion time.
         .without_time()
         .init();
 
-    run(service_fn(function_handler)).await
+    let func = service_fn(function_handler);
+    lambda_runtime::run(func).await?;
+    Ok(())
 }
