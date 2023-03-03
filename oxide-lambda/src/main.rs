@@ -1,4 +1,3 @@
-use log::info;
 use aws_sdk_s3::Client;
 use aws_config::meta::region::RegionProviderChain;
 use lambda_runtime::{service_fn, Error, LambdaEvent};
@@ -27,12 +26,13 @@ fn draw_reliability(shape: f64, scale: f64) -> Vec<f64> {
 }
 
 /// Save the reliability curve to S3
-async fn save_reliability(
-    client: &Client,
-    bucket: &str,
-    reliability: &[f64],
-    filename: &str,
-) -> Result<(), Error> {
+async fn save_reliability(reliability: &[f64], filename: &str) -> Result<(), Error> {
+    let region_provider = RegionProviderChain::default_provider().or_else("us-east-1");
+    let config = aws_config::from_env().region(region_provider).load().await;
+    let client = Client::new(&config);
+    let bucket = std::env::var("BUCKET_NAME")
+        .expect("A BUCKET_NAME must be set in this app's Lambda environment variables.");
+
     let serialized_data = bincode::serialize(reliability)?;
 
     let resp = client
@@ -49,26 +49,16 @@ async fn save_reliability(
 }
 
 async fn function_handler(event: LambdaEvent<Request>) -> Result<Response, Error> {
-    info!("Handling a reliability request...");
-    let region_provider = RegionProviderChain::default_provider().or_else("us-east-1");
-    let config = aws_config::from_env().region(region_provider).load().await;
-    let client = Client::new(&config);
-    let bucket = std::env::var("BUCKET_NAME")
-        .expect("A BUCKET_NAME must be set in this app's Lambda environment variables.");
-
-    info!("Draw reliability curve from Weibull");
     let shape = event.payload.weibull_shape;
     let scale = event.payload.weibull_scale;
-    let reliability = draw_reliability(shape, scale);
-    let num_points = reliability.len();
     let filename = event.payload.asset_id;
 
-    save_reliability(&client, &bucket, &reliability, &filename).await?;
-    info!("Saved reliability to S3");
+    let reliability = draw_reliability(shape, scale);
+    save_reliability(&reliability, &filename).await?;
 
     let resp = Response {
         req_id: event.context.request_id,
-        msg: format!("Asset reliability curve has {} timesteps!", num_points),
+        msg: format!("Asset reliability curve has {} timesteps!", reliability.len()),
     };
 
     Ok(resp)
