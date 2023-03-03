@@ -1,7 +1,5 @@
 use log::info;
-use std::time::Duration;
 use aws_sdk_s3::Client;
-use aws_sdk_s3::presigning::config::PresigningConfig;
 use aws_config::meta::region::RegionProviderChain;
 use lambda_runtime::{service_fn, Error, LambdaEvent};
 use serde::{Deserialize, Serialize};
@@ -34,20 +32,18 @@ async fn save_reliability(
     bucket: &str,
     reliability: &[f64],
     filename: &str,
-    expires_in: u64,
 ) -> Result<(), Error> {
-    let expires_in = Duration::from_secs(expires_in);
     let serialized_data = bincode::serialize(reliability)?;
 
-    let presigned_request = client
+    let resp = client
         .put_object()
         .bucket(bucket)
         .key(filename)
         .body(serialized_data.into())
-        .presigned(PresigningConfig::expires_in(expires_in)?)
+        .send()
         .await?;
 
-    println!("Object URI: {}", presigned_request.uri());
+    println!("Upload success. Version: {:?}", resp.version_id);
 
     Ok(())
 }
@@ -67,7 +63,7 @@ async fn function_handler(event: LambdaEvent<Request>) -> Result<Response, Error
     let num_points = reliability.len();
     let filename = event.payload.asset_id;
 
-    save_reliability(&client, &bucket, &reliability, &filename, 900).await?;
+    save_reliability(&client, &bucket, &reliability, &filename).await?;
     info!("Saved reliability to S3");
 
     let resp = Response {
