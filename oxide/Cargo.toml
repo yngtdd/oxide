@@ -8,3 +8,7 @@ statrs = "0.16.0"
 
 [lib]
 path = "src/lib.rs"
+
+[[bin]]
+name = "reliability"
+path = "src/bin/reliability.rs"
