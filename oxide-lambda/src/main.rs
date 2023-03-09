@@ -21,7 +21,7 @@ struct Response {
 /// Draw a survival function for a Weibull distribution
 fn draw_reliability(shape: f64, scale: f64) -> Vec<f64> {
     let weibull = Weibull::new(shape, scale).unwrap();
-    let reliability = reliability(weibull, 1_000_000);
+    let reliability = reliability(weibull, 3650);
     reliability
 }
 
