@@ -4,7 +4,7 @@
 
 Adding a little Rust to reliability software.
 
-## Install
+## Installation
 
 Building the AWS lambda function to run on the Graviton2 processor:
 
@@ -15,6 +15,6 @@ cargo lambda build --release --arm64
 Deploying to AWS lambda:
 
 ```
-cargo lambda deploy
+cargo lambda deploy oxide-lambda
 ```
 
